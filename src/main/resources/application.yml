@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/checkout.com
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+jwt:
+  secret-key: 123456
+  expiration-millis: 3600000
+checkout:
+  api:
+    url: https://api.sandbox.checkout.com
+    key: sk_sbox_gjhcrpnxkoaxhrsryafzz7cvoyw
+    processing-channel-id: pc_fb6ptslj5hgureg6zvgq577z2a
