@@ -1,0 +1,82 @@
+{
+	"info": {
+		"_postman_id": "19919399-f333-432d-8b7f-912e3fa0c503",
+		"name": "Checkout.co server API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "8640381"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"maxtkachenko\",\r\n    \"password\": \"password1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/auth/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Payments",
+			"item": [
+				{
+					"name": "New Request",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtYXh0a2FjaGVua28iLCJleHAiOjE3MjQzMzE5MzYsImlhdCI6MTcyNDMyODMzNn0.9WSujegm4z1lIVsmENaEoEQvY6M3D78aeuYavCUF38I",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"cardNumber\": \"1111111111111111\",\r\n    \"cvv\": \"123\",\r\n    \"amount\": 1,\r\n    \"expiryDate\": \"sd\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/payments/process",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"payments",
+								"process"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
