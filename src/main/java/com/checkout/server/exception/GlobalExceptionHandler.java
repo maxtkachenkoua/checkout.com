@@ -64,7 +64,7 @@ public class GlobalExceptionHandler {
                 .timestamp(System.currentTimeMillis())
                 .message(e.getMessage())
                 .build();
-        return new ResponseEntity<>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(errorDetails, HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
     @ExceptionHandler(PaymentException.class)
@@ -73,7 +73,16 @@ public class GlobalExceptionHandler {
                 .timestamp(System.currentTimeMillis())
                 .message(String.join(",", e.getPaymentErrors()))
                 .build();
-        return new ResponseEntity<>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(errorDetails, HttpStatus.UNPROCESSABLE_ENTITY);
+    }
+
+    @ExceptionHandler(DuplicatedCardNumberException.class)
+    public ResponseEntity<ErrorDetails> handleDuplicatedCardNumberException(DuplicatedCardNumberException e) {
+        ErrorDetails errorDetails = ErrorDetails.builder()
+                .timestamp(System.currentTimeMillis())
+                .message(e.getErrorMessage())
+                .build();
+        return new ResponseEntity<>(errorDetails, HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
     @ExceptionHandler(Exception.class)

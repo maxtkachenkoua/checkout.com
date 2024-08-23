@@ -5,6 +5,7 @@ import com.checkout.server.db.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -22,6 +23,19 @@ public class UserService implements UserDetailsService {
     public UserEntity findByUserName(String userName) {
         return userRepository.findByUsername(userName)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    }
+
+    public UserEntity getCurrentUser() {
+        return findByUserName(getCurrentUserName());
+    }
+
+    private String getCurrentUserName() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof UserDetails) {
+            return ((UserDetails) principal).getUsername();
+        } else {
+            return principal.toString();
+        }
     }
 
     @Override

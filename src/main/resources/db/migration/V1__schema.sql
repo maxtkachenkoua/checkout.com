@@ -21,3 +21,17 @@ CREATE TABLE tokens (
     user_id BIGINT NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
+
+CREATE TABLE payments (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    payment_id VARCHAR(255) NOT NULL,
+    payment_type VARCHAR(255) NOT NULL,
+    user_id BIGINT NOT NULL,
+    amount INT NOT NULL,
+    currency CHAR(3) NOT NULL,
+    status VARCHAR(50) NOT NULL,
+    updated_at TIMESTAMP,
+    CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+

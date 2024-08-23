@@ -30,7 +30,7 @@ public class SecurityConfiguration {
         http
                 .csrf(AbstractHttpConfigurer::disable) // Disable CSRF for JWT
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/api/auth/**").permitAll() // Allow access to login endpoints
+                        .requestMatchers("/api/auth/**", "/api/payments/payment-callback/**").permitAll() // Allow access to login endpoints
                         .anyRequest().authenticated() // All other requests need to be authenticated
                 )
                 .sessionManagement(sess -> sess

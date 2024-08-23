@@ -1,6 +1,5 @@
 package com.checkout.server.exception;
 
-import com.checkout.server.service.model.PaymentError;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
