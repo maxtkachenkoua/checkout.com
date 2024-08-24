@@ -13,9 +13,9 @@ public class PaymentRequest {
     @JsonProperty("processing_channel_id")
     private String processingChannelId;
     private String currency;
-
     private Source source;
-
+    @JsonProperty("3ds")
+    private ThreeDSecure threeDSecure;
 
     @Data
     @Builder
@@ -38,7 +38,13 @@ public class PaymentRequest {
         private String token;
     }
 
-    public interface Source {
+    @Data
+    @Builder
+    public static class ThreeDSecure {
+        private final boolean enabled = true;
+        private final String attemptN3D = "Y";
+    }
 
+    public interface Source {
     }
 }

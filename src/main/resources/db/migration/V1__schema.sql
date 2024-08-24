@@ -27,7 +27,7 @@ CREATE TABLE payments (
     payment_id VARCHAR(255) NOT NULL,
     payment_type VARCHAR(255) NOT NULL,
     user_id BIGINT NOT NULL,
-    amount INT NOT NULL,
+    amount BIGINT NOT NULL,
     currency CHAR(3) NOT NULL,
     status VARCHAR(50) NOT NULL,
     updated_at TIMESTAMP,

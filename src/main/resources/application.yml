@@ -1,18 +1,27 @@
 server:
-  port: 8889
+  port: ${ENV_SERVER_PORT:8889}
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/checkout.com
-    username: root
-    password: root
+    url: ${ENV_DB_CONNECTION_URL:jdbc:mysql://localhost:3306/checkout.com}
+    username: ${ENV_DB_USERNAME:root}
+    password: ${ENV_DB_PASSWORD:root}
     driver-class-name: com.mysql.cj.jdbc.Driver
 jwt:
   secret-key: 123456
   expiration-millis: 9600000
 checkout:
+  urls:
+    payment-url: ${ENV_ENDPOINT_PAYMENT_URL:/process}
+    payment-callback-url: ${ENV_ENDPOINT_PAYMENT_CALLBACK_URL:/payment-callback}
   api:
-    url: https://api.sandbox.checkout.com
-    secret-key: sk_sbox_gjhcrpnxkoaxhrsryafzz7cvoyw
-    public-api-key: pk_sbox_wgxxlg53oyic7iluulf7xkm6ma2
-    processing-channel-id: pc_fb6ptslj5hgureg6zvgq577z2a
-    callback-url-signature: dd32299f-553c-4c31-9c9f-d6854592256f
+    url: ${ENV_CHECKOUT_BASE_API_URL:https://api.sandbox.checkout.com}
+    secret-key: ${ENV_CHECKOUT_SECRET_KEY:sk_sbox_gjhcrpnxkoaxhrsryafzz7cvoyw}
+    public-api-key: ${ENV_CHECKOUT_PUBLIC_API_KEY:pk_sbox_wgxxlg53oyic7iluulf7xkm6ma2}
+    processing-channel-id: ${ENV_CHECKOUT_PROCESSING_CHANNEL_ID:pc_fb6ptslj5hgureg6zvgq577z2a}
+    callback-url-signature: ${ENV_CALLBACK_URL_SIGNATURE:dd32299f-553c-4c31-9c9f-d6854592256f}
+
+scheduler:
+  thread-pool-size: 10
+  max-attempts: 3
+  initial-delay-after-payment-request: 30
+  period-between-attempts: 30

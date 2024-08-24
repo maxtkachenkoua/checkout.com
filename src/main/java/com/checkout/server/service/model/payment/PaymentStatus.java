@@ -15,11 +15,19 @@ public enum PaymentStatus {
     PROCESSING,
     COMPLETED;
 
-    public static PaymentStatus toPaymentStatus(String status) {
+    public static PaymentStatus fromResponsePaymentStatus(String status) {
         if (status == null || status.isEmpty()) {
             throw new IllegalArgumentException("Status cannot be null or empty");
         }
         return PaymentStatus.valueOf(status.trim().toUpperCase());
     }
+
+    public static PaymentStatus fromCallbackPaymentStatus(String status) {
+        if (status == null || status.isEmpty()) {
+            throw new IllegalArgumentException("Status cannot be null or empty");
+        }
+        return PaymentStatus.valueOf(status.trim().toUpperCase().replace("PAYMENT_", ""));
+    }
+
 }
 

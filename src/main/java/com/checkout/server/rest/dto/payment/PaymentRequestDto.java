@@ -31,4 +31,6 @@ public class PaymentRequestDto {
     private String currency;
     @NotNull(message = "paymentType field is not set. Available values: [CARD_INFO, CARD_TOKEN]")
     private PaymentType paymentType;
+    @NotNull(message = "use3Ds field is not set")
+    private Boolean use3Ds;
 }

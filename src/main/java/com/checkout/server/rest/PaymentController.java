@@ -18,15 +18,14 @@ import java.nio.charset.StandardCharsets;
 public class PaymentController {
     private final PaymentService paymentService;
 
-    @PostMapping("/process")
+    @PostMapping("${checkout.urls.payment-url}")
     public ResponseEntity<PaymentResponse> processPayment(@Valid @RequestBody PaymentRequestDto paymentRequest) throws Exception {
         return ResponseEntity.ok(paymentService.createPayment(paymentRequest));
     }
 
-    @PostMapping("/payment-callback")
+    @PostMapping("${checkout.urls.payment-callback-url}")
     public void handleWebhook(@RequestHeader("Cko-Signature") String signature, HttpServletRequest request) throws Exception {
-        paymentService
-                .processPaymentCallback(StreamUtils
-                        .copyToString(request.getInputStream(), StandardCharsets.UTF_8), signature);
+        paymentService.processPaymentCallback(StreamUtils
+                .copyToString(request.getInputStream(), StandardCharsets.UTF_8), signature);
     }
 }
