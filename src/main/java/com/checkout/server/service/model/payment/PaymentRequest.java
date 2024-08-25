@@ -17,6 +17,9 @@ public class PaymentRequest {
     @JsonProperty("3ds")
     private ThreeDSecure threeDSecure;
 
+    public interface Source {
+    }
+
     @Data
     @Builder
     public static class CardSource implements Source {
@@ -43,8 +46,5 @@ public class PaymentRequest {
     public static class ThreeDSecure {
         private final boolean enabled = true;
         private final String attemptN3D = "Y";
-    }
-
-    public interface Source {
     }
 }

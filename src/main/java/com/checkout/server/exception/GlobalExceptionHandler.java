@@ -76,15 +76,6 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorDetails, HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
-    @ExceptionHandler(DuplicatedCardNumberException.class)
-    public ResponseEntity<ErrorDetails> handleDuplicatedCardNumberException(DuplicatedCardNumberException e) {
-        ErrorDetails errorDetails = ErrorDetails.builder()
-                .timestamp(System.currentTimeMillis())
-                .message(e.getErrorMessage())
-                .build();
-        return new ResponseEntity<>(errorDetails, HttpStatus.UNPROCESSABLE_ENTITY);
-    }
-
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleGlobalException(Exception ex, WebRequest request) {
         ErrorDetails errorDetails = ErrorDetails.builder()

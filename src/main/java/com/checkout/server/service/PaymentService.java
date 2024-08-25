@@ -33,13 +33,12 @@ import static org.springframework.http.HttpStatus.UNPROCESSABLE_ENTITY;
 public class PaymentService extends BaseCheckoutService {
     private static final BigDecimal CENTS_HUNDRED = BigDecimal.valueOf(100);
     private static final String CHECKOUT_PAYMENTS_PATH = "/payments/";
-
-    @Value("${checkout.api.callback-url-signature}")
-    private String callbackUrlSignature;
     private final CardService cardService;
     private final UserService userService;
     private final PaymentStatusScheduler paymentStatusScheduler;
     private final PaymentRepository paymentRepository;
+    @Value("${checkout.api.callback-url-signature}")
+    private String callbackUrlSignature;
 
     public PaymentResponse createPayment(PaymentRequestDto paymentRequest) throws Exception {
         UserEntity currentUser = userService.getCurrentUser();
@@ -52,6 +51,7 @@ public class PaymentService extends BaseCheckoutService {
                 .source(recognizeSource(paymentRequest))
                 .threeDSecure(paymentRequest.getUse3Ds() ? PaymentRequest.ThreeDSecure.builder().build() : null)
                 .build();
+
         ResponseEntity<PaymentResponse> response;
         try {
             response = restTemplate.exchange(checkoutApiUrl + CHECKOUT_PAYMENTS_PATH,
@@ -61,6 +61,7 @@ public class PaymentService extends BaseCheckoutService {
 
             String submittedPaymentId = Objects.requireNonNull(response.getBody()).getId();
             PaymentStatus paymentStatus = PaymentStatus.fromResponsePaymentStatus(response.getBody().getStatus());
+
             // persist submitted payment
             paymentRepository.save(PaymentEntity.builder()
                     .paymentType(paymentRequest.getPaymentType())

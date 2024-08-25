@@ -20,9 +20,7 @@ public class AuthService {
     @Transactional
     public String authenticate(String username, String password) throws Exception {
         try {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(username, password)
-            );
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
         } catch (Exception e) {
             throw new InvalidUsernamePasswordException();
         }

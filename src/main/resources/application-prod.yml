@@ -1,0 +1,23 @@
+server:
+  port: ${ENV_SERVER_PORT}
+scheduler:
+  thread-pool-size: ${ENV_SCHEDULER_THREAD_POOL_SIZE}
+  max-attempts: ${ENV_SCHEDULER_MAX_ATTEMPTS}
+  initial-delay-after-payment-request: ${ENV_SCHEDULER_INITIAL_DELAY_AFTER_PAYMENT_REQUEST}
+  period-between-attempts: ${ENV_SCHEDULER_PERIOD_BETWEEN_ATTEMPTS}
+spring:
+  datasource:
+    url: ${ENV_DB_CONNECTION_URL}
+    username: ${ENV_DB_USERNAME}
+    password: ${ENV_DB_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+checkout:
+  urls:
+    payment-url: ${ENV_ENDPOINT_PAYMENT_URL}
+    payment-callback-url: ${ENV_ENDPOINT_PAYMENT_CALLBACK_URL}
+  api:
+    url: ${ENV_CHECKOUT_BASE_API_URL}
+    secret-key: ${ENV_CHECKOUT_SECRET_KEY}
+    public-api-key: ${ENV_CHECKOUT_PUBLIC_API_KEY}
+    processing-channel-id: ${ENV_CHECKOUT_PROCESSING_CHANNEL_ID}
+    callback-url-signature: ${ENV_CALLBACK_URL_SIGNATURE}

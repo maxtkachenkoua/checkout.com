@@ -14,10 +14,8 @@ import java.util.function.Function;
 
 @Component
 public class JwtTokenProvider {
-
     @Value("${jwt.secret-key}")
     private String jwtSecretKey;
-
     @Value("${jwt.expiration-millis}")
     private Long expirationMillis;
 
@@ -48,7 +46,7 @@ public class JwtTokenProvider {
 
     private String createToken(String userName) {
         Map<String, Object> claims = new HashMap<>();
-        Long issuedAtTimestamp = System.currentTimeMillis();
+        long issuedAtTimestamp = System.currentTimeMillis();
         return Jwts.builder().setClaims(claims).setSubject(userName)
                 .setIssuedAt(new Date(issuedAtTimestamp))
                 .setExpiration(new Date(issuedAtTimestamp + expirationMillis))

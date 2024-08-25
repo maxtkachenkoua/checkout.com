@@ -1,8 +1,8 @@
 package com.checkout.server.scheduler;
 
+import com.checkout.server.scheduler.model.ScheduledFutureHolder;
 import com.checkout.server.service.PaymentService;
 import com.checkout.server.service.model.payment.PaymentStatus;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -24,11 +23,11 @@ public class PaymentStatusScheduler {
     private final PaymentService paymentService;
     private final ScheduledExecutorService scheduler;
     @Value("${scheduler.max-attempts}")
-    private long maxAttempts;
+    private Long maxAttempts;
     @Value("${scheduler.initial-delay-after-payment-request}")
-    private long initialDelayAfterPaymentRequest;
+    private Long initialDelayAfterPaymentRequest;
     @Value("${scheduler.period-between-attempts}")
-    private long periodBetweenAttempts;
+    private Long periodBetweenAttempts;
 
     public PaymentStatusScheduler(@Lazy PaymentService paymentService,
                                   @Value("${scheduler.thread-pool-size}") int threadPoolSize) {
@@ -65,15 +64,6 @@ public class PaymentStatusScheduler {
                 .scheduleAtFixedRate(task, initialDelayAfterPaymentRequest, periodBetweenAttempts, TimeUnit.SECONDS));
         log.info(String.format("[PAYMENT_STATUS_SCHEDULER][%s][SUBMITTED]. First retry in %d seconds. Period between attempts is %d seconds",
                 paymentId, initialDelayAfterPaymentRequest, periodBetweenAttempts));
-    }
-}
-
-@Data
-class ScheduledFutureHolder {
-    private ScheduledFuture<?> scheduledFuture;
-
-    public void cancel() {
-        scheduledFuture.cancel(false);
     }
 }
 

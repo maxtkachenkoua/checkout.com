@@ -10,6 +10,5 @@ public class PaymentCallbackResponse {
     @Data
     public static class PaymentData {
         private String id;
-
     }
 }

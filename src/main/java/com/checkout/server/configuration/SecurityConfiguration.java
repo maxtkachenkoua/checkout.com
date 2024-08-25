@@ -28,17 +28,17 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(AbstractHttpConfigurer::disable) // Disable CSRF for JWT
+                .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/api/auth/**", "/api/payments/payment-callback/**").permitAll() // Allow access to login endpoints
-                        .anyRequest().authenticated() // All other requests need to be authenticated
+                        .requestMatchers("/api/auth/**",
+                                "/api/payments/payment-callback/**")
+                        .permitAll()
+                        .anyRequest().authenticated()
                 )
-                .sessionManagement(sess -> sess
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // Make sessions stateless
-                )
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
-                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class); // Add JWT filter
-
+                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
@@ -53,13 +53,6 @@ public class SecurityConfiguration {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
-
-    public static void main(String[] args){
-        BCryptPasswordEncoder encoder= new BCryptPasswordEncoder();
-        System.out.println(encoder.encode("password1"));
-        System.out.println(encoder.encode("password2"));
-        System.out.println(encoder.encode("password3"));
     }
 
     @Bean
