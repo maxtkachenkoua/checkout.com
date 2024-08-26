@@ -9,7 +9,7 @@ Frontend source code: https://github.com/maxtkachenkoua/checkout.com-client
 ## Tech Stack
 
 - **Backend**: Java 17, Spring Boot, Spring Security, Postgres DB, flyway
-- **Backend Integration**: RESTful API (Rect based client)
+- **Backend Integration**: RESTful API (React based client)
 - **Payment Gateway**: Checkout.com
 
 ## Features
