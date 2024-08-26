@@ -5,11 +5,14 @@ import com.checkout.server.db.model.UserEntity;
 import com.checkout.server.db.repository.PaymentRepository;
 import com.checkout.server.exception.PaymentException;
 import com.checkout.server.rest.dto.payment.PaymentRequestDto;
+import com.checkout.server.rest.dto.payment.PaymentResponseDto;
+import com.checkout.server.rest.dto.payment.PaymentStatusResponseDto;
 import com.checkout.server.scheduler.PaymentStatusScheduler;
 import com.checkout.server.service.model.payment.*;
 import com.checkout.server.service.model.payment.PaymentRequest.CardSource;
 import com.checkout.server.service.model.payment.PaymentRequest.Source;
 import com.checkout.server.service.model.payment.PaymentRequest.TokenSource;
+import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,6 +24,7 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import java.math.BigDecimal;
 import java.util.Objects;
+import java.util.Optional;
 
 import static com.checkout.server.service.model.payment.PaymentStatus.fromCallbackPaymentStatus;
 import static com.checkout.server.service.model.payment.PaymentStatus.fromResponsePaymentStatus;
@@ -39,8 +43,14 @@ public class PaymentService extends BaseCheckoutService {
     private final PaymentRepository paymentRepository;
     @Value("${checkout.api.callback-url-signature}")
     private String callbackUrlSignature;
+    @Value("${client.allowed-origin}")
+    private String clientAllowedOrigin;
+    @Value("${client.success-url}")
+    private String clientSuccessUrl;
+    @Value("${client.failure-url}")
+    private String clientFailureUrl;
 
-    public PaymentResponse createPayment(PaymentRequestDto paymentRequest) throws Exception {
+    public PaymentResponseDto createPayment(PaymentRequestDto paymentRequest) throws Exception {
         UserEntity currentUser = userService.getCurrentUser();
         log.info(String.format("[CREATE_PAYMENT][%s] - [REQUEST]:  %s", currentUser.getUsername(), paymentRequest));
 
@@ -49,7 +59,10 @@ public class PaymentService extends BaseCheckoutService {
                 .currency(paymentRequest.getCurrency())
                 .processingChannelId(processingChannelId)
                 .source(recognizeSource(paymentRequest))
-                .threeDSecure(paymentRequest.getUse3Ds() ? PaymentRequest.ThreeDSecure.builder().build() : null)
+                .successUrl(clientAllowedOrigin + clientSuccessUrl)
+                .failureUrl(clientAllowedOrigin + clientFailureUrl)
+                .threeDSecure(paymentRequest.getUse3Ds() ? PaymentRequest.ThreeDSecure.builder()
+                        .build() : null)
                 .build();
 
         ResponseEntity<PaymentResponse> response;
@@ -66,6 +79,7 @@ public class PaymentService extends BaseCheckoutService {
             paymentRepository.save(PaymentEntity.builder()
                     .paymentType(paymentRequest.getPaymentType())
                     .paymentId(submittedPaymentId)
+                    .sessionId(extractSessionId(response.getBody()))
                     .userId(currentUser.getId())
                     .amount(paymentRequest.getAmount())
                     .currency(paymentRequest.getCurrency())
@@ -86,7 +100,13 @@ public class PaymentService extends BaseCheckoutService {
             }
             throw e;
         }
-        return response.getBody();
+
+        PaymentResponse paymentResponse = response.getBody();
+        return PaymentResponseDto.builder()
+                .id(paymentResponse.getId())
+                .status(paymentResponse.getStatus())
+                .redirectUrl(paymentResponse.getLinks().getRedirect() != null ? paymentResponse.getLinks().getRedirect().getRedirectUrl() : null)
+                .build();
     }
 
     public PaymentStatusResponse getPaymentStatus(String paymentId) {
@@ -95,6 +115,10 @@ public class PaymentService extends BaseCheckoutService {
                 new HttpEntity<>(authHeaderSecretKey()),
                 PaymentStatusResponse.class
         ).getBody();
+    }
+
+    public PaymentStatusResponseDto pollPaymentStatus(String id) {
+        return modelMapper.map(getPaymentByIdOrSid(id), PaymentStatusResponseDto.class);
     }
 
     public void processPaymentCallback(String requestBody, String signature) throws Exception {
@@ -139,6 +163,11 @@ public class PaymentService extends BaseCheckoutService {
         return paymentRepository.findByPaymentId(paymentId).orElseThrow();
     }
 
+    private PaymentEntity getPaymentByIdOrSid(String id) {
+        Optional<PaymentEntity> byPaymentId = paymentRepository.findByPaymentId(id);
+        return byPaymentId.orElseGet(() -> paymentRepository.findBySessionId(id).orElseThrow());
+    }
+
     private Source recognizeSource(PaymentRequestDto paymentRequest) throws Exception {
         return switch (paymentRequest.getPaymentType()) {
             case CARD_INFO -> cardInfoSource(paymentRequest);
@@ -159,5 +188,13 @@ public class PaymentService extends BaseCheckoutService {
         return TokenSource.builder()
                 .token(cardService.tokenizeCard(paymentRequest).getToken())
                 .build();
+    }
+
+    private String extractSessionId(PaymentResponse paymentResponse) {
+        if (paymentResponse.getLinks().getRedirect() != null) {
+            String redirectUrl = paymentResponse.getLinks().getRedirect().getRedirectUrl();
+            return StringUtils.isNotBlank(redirectUrl) ? redirectUrl.substring(redirectUrl.indexOf("sid_")) : null;
+        }
+        return null;
     }
 }

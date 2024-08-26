@@ -15,7 +15,7 @@ public class PaymentResponse {
         private Redirect redirect;
 
         @Data
-        private static class Redirect {
+        public static class Redirect {
             @JsonProperty("href")
             private String redirectUrl;
         }

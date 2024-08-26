@@ -25,6 +25,7 @@ CREATE TABLE tokens (
 CREATE TABLE payments (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     payment_id VARCHAR(255) NOT NULL,
+    session_id VARCHAR(255) NULL,
     payment_type VARCHAR(255) NOT NULL,
     user_id BIGINT NOT NULL,
     amount BIGINT NOT NULL,

@@ -21,3 +21,7 @@ checkout:
     public-api-key: ${ENV_CHECKOUT_PUBLIC_API_KEY:pk_sbox_wgxxlg53oyic7iluulf7xkm6ma2}
     processing-channel-id: ${ENV_CHECKOUT_PROCESSING_CHANNEL_ID:pc_fb6ptslj5hgureg6zvgq577z2a}
     callback-url-signature: ${ENV_CALLBACK_URL_SIGNATURE:dd32299f-553c-4c31-9c9f-d6854592256f}
+client:
+  allowed-origin: ${ENV_CLIENT_ALLOWED_ORIGIN:http://95.216.224.218:3000}
+  success-url: ${ENV_CLIENT_SUCCESS_URL:/status}
+  failure-url: ${ENV_CLIENT_FAILURE_URL:/failure}

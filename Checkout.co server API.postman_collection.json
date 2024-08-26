@@ -43,19 +43,19 @@
 			"name": "Payments",
 			"item": [
 				{
-					"name": "New Request",
+					"name": "Process Payment",
 					"request": {
 						"method": "POST",
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtYXh0a2FjaGVua28iLCJleHAiOjE3MjQzMzE5MzYsImlhdCI6MTcyNDMyODMzNn0.9WSujegm4z1lIVsmENaEoEQvY6M3D78aeuYavCUF38I",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtYXh0a2FjaGVua28iLCJleHAiOjE3MjQ2OTYxMTksImlhdCI6MTcyNDY4NjUxOX0.jeNjMw5vP2UX4SENGDYbXZY1je3FGALtB3hQXysrLKQ",
 								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"cardNumber\": \"1111111111111111\",\r\n    \"cvv\": \"123\",\r\n    \"amount\": 1,\r\n    \"expiryDate\": \"sd\"\r\n}",
+							"raw": "{\r\n    \"paymentType\": \"CARD_INFO\",\r\n    \"cardNumber\": \"4242424242424242\",\r\n    \"currency\": \"USD\",\r\n    \"amount\": 100,\r\n    \"expiryMonth\": \"12\",\r\n    \"expiryYear\": \"25\",\r\n    \"cvv\": \"123\",\r\n    \"use3Ds\": false\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -71,6 +71,26 @@
 								"api",
 								"payments",
 								"process"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Payment Status",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/payments/status/sid_4bz5ybdgw73urjuqkkvmuxqxwm",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"payments",
+								"status",
+								"sid_4bz5ybdgw73urjuqkkvmuxqxwm"
 							]
 						}
 					},

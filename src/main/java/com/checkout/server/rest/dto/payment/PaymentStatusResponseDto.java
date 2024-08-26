@@ -1,25 +1,15 @@
-package com.checkout.server.db.model;
+package com.checkout.server.rest.dto.payment;
 
-import com.checkout.server.rest.dto.payment.PaymentType;
 import com.checkout.server.service.model.payment.PaymentStatus;
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-@Entity
-@Table(name = "payments")
-public class PaymentEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class PaymentStatusResponseDto {
     private String paymentId;
     private String sessionId;
     private Long userId;

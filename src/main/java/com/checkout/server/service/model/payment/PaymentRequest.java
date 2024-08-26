@@ -16,6 +16,10 @@ public class PaymentRequest {
     private Source source;
     @JsonProperty("3ds")
     private ThreeDSecure threeDSecure;
+    @JsonProperty("success_url")
+    private String successUrl;
+    @JsonProperty("failure_url")
+    private String failureUrl;
 
     public interface Source {
     }

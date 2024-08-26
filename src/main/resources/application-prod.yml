@@ -21,3 +21,7 @@ checkout:
     public-api-key: ${ENV_CHECKOUT_PUBLIC_API_KEY}
     processing-channel-id: ${ENV_CHECKOUT_PROCESSING_CHANNEL_ID}
     callback-url-signature: ${ENV_CALLBACK_URL_SIGNATURE}
+client:
+  allowed-origin: ${ENV_CLIENT_ALLOWED_ORIGIN}
+  success-url: ${ENV_CLIENT_SUCCESS_URL}
+  failure-url: ${ENV_CLIENT_FAILURE_URL}
